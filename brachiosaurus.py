@@ -1,3 +1,4 @@
+import sys
 import math
 import json
 import socket
@@ -11,12 +12,18 @@ BG_CONFIG = dict(
     arm_2_centre=90,
     servo_1_centre=1582,
     servo_2_centre=1457,
-    wait=0.2,
+    wait=0.3,
     pw_up=1550,
     pw_down=1200
     )
 
 TAU = 2 * math.pi
+
+def debug(msg):
+    """since stdout will be redirected into a file some of the time, printing
+    of debug info to stderr is useful every once in a while"""
+
+    sys.stderr.write(f"{msg}\n")
 
 class Plotter:
     def __init__(self, lines):
@@ -134,6 +141,8 @@ class Canvas:
             self.lines.append(self.current_line)
             self.current_line = [[self.x, self.y]]
         return self.lines
+
+    # TODO thin_lines: compute average distance of points in all lines. points within a line that lie closer to their predecessor than this value are culled. ?
 
     def __m(self, x, y):
         if len(self.current_line) > 1:
