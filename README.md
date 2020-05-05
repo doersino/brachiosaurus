@@ -80,3 +80,14 @@ python3 ~/Dropbox/code/brachiosaurus/mydrawing.py > ~/Desktop/preview.svg
 ### You're looking for some examples?
 
 Look no further than `examples.py` – which has the same structure as the `mydrawing.py` file outlined above and can be deployed and run in the same manner – where I've been collecting the code of some drawings I've made myself.
+
+
+### You've got a different plotter?
+
+The code is intentionally kept simple and extendible.
+
+* Drawings are represented as lists of lines,
+* lines are lists of points, and
+* points are 2-ary lists of x and y coordinates.
+
+If your plotter can be driven via Python and you're able to implement a function that translates this representation into whatever representation your plotter expects (see `RealPlotter.emit` and `FakePlotter.emit`), you should be golden. *(Feel free to send a pull request!)*
