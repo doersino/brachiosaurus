@@ -268,12 +268,88 @@ def trojaborg_labyrinth_2(c):
     c.arc(xoff-0.5, 0, -(9-0.5), τ/2, τ)
     c.arc(xoff-3, 0, -6, τ/4, τ/2)
 
+def wiki_spiral(c):
+    """fancy spiral thingy, via
+    https://commons.wikimedia.org/wiki/File:Turtle_Graphics_Spiral.svg"""
+
+    def xy(r, a):
+        x = r * math.cos(a)
+        y = r * math.sin(a)
+        return [x, y]
+
+    angles = [0, τ/3, 2*τ/3]
+    turns = 3
+    m = 40
+    for i in range(m):
+        for j, angle in enumerate(angles):
+            r = m - i - j/3
+            a = angle + turns * i/m
+            [x,y] = xy(r, a)
+            if (j == 0 and i == 0):
+                c.move(x, y)
+            else:
+                c.line(x, y)
+
+def overlaid_3dish_balls(c):
+    def xy(r, a):
+        x = r * math.cos(a)
+        y = r * math.sin(a)
+        return [x, y]
+
+    m = 30
+    for i in range(m):
+        a1 = τ/2 * i/m
+        a2 = -a1 - math.sin(a1)
+        r = 10
+
+        [x,y] = xy(r, a1)
+        c.move(x,y)
+        [x,y] = xy(r, a2)
+        c.line(x,y)
+        [x,y] = xy(2*r/3, a1+τ/4)
+        c.move(x,y)
+        [x,y] = xy(2*r/3, a2+τ/4)
+        c.line(x,y)
+
+def line_circles(c):
+    """circles made up of lines, via
+    https://twitter.com/generativehut/status/1257576360933023744 and
+    https://stackoverflow.com/a/14310071"""
+
+    # TODO could do this with multiple colors, one for each circle
+    nm = 5
+    mm = (nm-2)*7
+    ro = 10
+    for n in range(nm):
+        r = ro * 2*n/3
+        m = int(mm * r/ro)
+        for i in range(1, m):
+            x = -r + 2 * r * i/m
+            y = math.sqrt(r ** 2 - x ** 2)
+            c.move(x+n/nm,y - r)
+            c.line(x+n/nm,-y - r)
+
+def hatched_circle(c):
+    for n in range(5):
+        m = 2*(2 ** n)
+        r = 10
+        for i in range(1, m):
+            x = -r + 2 * r * i/m
+            y = math.sqrt(r ** 2 - x ** 2)
+            c.move(x - r, y - r)
+            c.line(x - r, -y - r)
+        for i in range(1, m):
+            y = -r + 2 * r * i/m
+            x = math.sqrt(r ** 2 - y ** 2)
+            c.move(x - r, y - r)
+            c.line(-x - r, y - r)
+
 
 
 
 c = bs.Canvas()
 
-trojaborg_labyrinth_2(c)
+hatched_circle(c)
 
 plotter = bs.AutoPlotter().from_canvas(c)
 #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
@@ -285,9 +361,4 @@ plotter.emit()
 # TODO from noahdoersing.com: raindrops, labyrinth, asteroids?
 # TODO some ca or gol
 # TODO anything from https://read.leakyabstraction.dev/index.php?state=unread&s=inconvergent.net
-# TODO plotter self portrait: pic from top down, plotted using brachiograph's built-in vectorization routine
-# TODO something with multiple colors/pens, maybe https://twitter.com/generativehut/status/1257576360933023744
-# TODO https://www.instagram.com/p/B-E3yNNnxOv/?igshid=s95k17q53crp
-# TODO https://twitter.com/KevinsPlots/status/1257389550382571520
-# TODO https://twitter.com/KevinsPlots/status/1257424415375138816
 # TODO boids
