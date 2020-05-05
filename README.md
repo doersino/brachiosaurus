@@ -1,4 +1,4 @@
-# brachiosaurus
+# brachiosaurus 🦕
 
 *An incredibly basic [turtle drawing](https://en.wikipedia.org/wiki/Turtle_graphics) tool I've built for making generative art with my [BrachioGraph pen plotter](https://www.brachiograph.art).*
 
