@@ -183,6 +183,9 @@ def trojaborg_labyrinth_1(c):
     but thus with lots of unnecessary pen movements), see
     https://i.pinimg.com/originals/db/5f/e7/db5fe768cf21d0fd00a7f6be6ca43c73.jpg
     """
+
+    # TODO labyrinth: make heuristic that turns generated one into hand-coded one, make its size parametric. also why does move not seem to terminate lines?
+
     d = 5 * τ
 
     # top half
@@ -277,7 +280,12 @@ def wiki_spiral(c):
         y = r * math.sin(a)
         return [x, y]
 
-    angles = [0, τ/3, 2*τ/3]
+    #angles = [0, τ/3, 2*τ/3]
+    #angles = [0, τ/4, τ/2, 3*τ/4]
+    corners = 3
+    #corners = 2
+    #corners = 10
+    angles = [a/corners * τ for a in range(corners)]
     turns = 3
     m = 40
     for i in range(m):
@@ -344,19 +352,61 @@ def hatched_circle(c):
             c.move(x - r, y - r)
             c.line(-x - r, y - r)
 
+def ca(c):
+    """elementary cellular automaton"""
+
+    random.seed(42)
+
+    # config
+    rules = [11,26,30,57,60,90,106,150]
+    rules = [60]
+    width = 15
+    height = 30
+
+    # state keeping
+    rule = {}
+    state = []
+    log = []
+
+    # process rule
+    rule_choice = random.choice(rules)
+    bin_rule_choice = list("{:08b}".format(rule_choice))
+    for i, ru in enumerate(bin_rule_choice):
+        rule["{:03b}".format(i)] = ru
+
+    # init
+    for _ in range(width):
+        state.append("1" if 𝕣() > 0.5 else "0")
+    log.append(state)
+
+    # run ca
+    while len(log) < height:
+        state2 = []
+        for i, _ in enumerate(state):
+            left = (i - 1) % len(state)
+            middle = i
+            right = (i + 1) % len(state)
+
+            neighborhood = state[left] + state[middle] + state[right]
+
+            state2.append(rule[neighborhood])
+        state = state2
+        log.append(state2)
+
+    for y, st in enumerate(log):
+        for x, ce in enumerate(st):
+            if ce == "1":
+                c.circle(x, y, 0.5, 0.03)
 
 
 
 c = bs.Canvas()
 
-hatched_circle(c)
+ca(c)
 
 plotter = bs.AutoPlotter().from_canvas(c)
 #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
 plotter.emit()
-
-
-# TODO labyrinth: make heuristic that turns generated one into hand-coded one, make its size parametric. also why does move not seem to terminate lines?
 
 # TODO from noahdoersing.com: raindrops, labyrinth, asteroids?
 # TODO some ca or gol
