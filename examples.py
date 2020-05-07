@@ -359,7 +359,7 @@ def ca(c):
 
     # config
     rules = [11,26,30,57,60,90,106,150]
-    rules = [60]
+    #rules = [60]
     width = 15
     height = 30
 
@@ -398,17 +398,44 @@ def ca(c):
             if ce == "1":
                 c.circle(x, y, 0.5, 0.03)
 
+def uji(c):
+    """https://en.m.wikipedia.org/wiki/Uji_(Being-Time)"""
 
+    m = 4
+    d = 12
+
+    for i in range(m):
+        i = i/d
+        c.move(0+i, 0)
+        c.line(0+i, 2)
+        c.arc(0.75, 2, -0.75+i, 0, τ/2)
+        c.line(1.5-i, 0)
+
+    for i in range(m):
+        i = i/d
+        c.move(2-i, 0)
+        c.line(2-i, 2)
+        c.arc(0.75, 2, 1.25-i, 0, τ/4)
+
+    for i in range(m):
+        i = i/d
+        c.move(2.5-i, 0)
+        c.line(2.5-i, 2)
+
+def overlapping_circles(c):
+    for i in range(10):
+        c.arc(1, 0, -math.sqrt(i+1)/math.sqrt(10), 0, τ)
+    c.arc(2, 0, -1, 0, τ/3)
+    c.arc(2, 0, -1, 2*τ/3, τ)
+
+def moire_spirals(c):
+    for i in range(4):
+        c.spiral(0, i, 10, 1, 0.3)
 
 c = bs.Canvas()
 
-ca(c)
+uji(c)
 
-plotter = bs.AutoPlotter().from_canvas(c)
 #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
+plotter = bs.AutoPlotter().from_canvas(c)
 plotter.emit()
-
-# TODO from noahdoersing.com: raindrops, labyrinth, asteroids?
-# TODO some ca or gol
-# TODO anything from https://read.leakyabstraction.dev/index.php?state=unread&s=inconvergent.net
-# TODO boids
