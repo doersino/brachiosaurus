@@ -56,7 +56,7 @@ c = bs.Canvas()
 # turtle drawing commands go here
 
 plotter = bs.AutoPlotter().from_canvas(c)
-#plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
+#plotter = bs.AutoPlotter().from_file("test-patterns/accuracy.json")
 plotter.emit()
 ```
 
