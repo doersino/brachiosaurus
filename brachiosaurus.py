@@ -42,19 +42,17 @@ class Plotter:
         with open(filename, "r") as f:
             return cls(json.load(f))
 
-    def optimize(self):
-        # TODO path optimization? eh
-        # TODO ideally: reorder list of lines such that sum of distances between end and start points is minimal. equivalent to tsp => np-complete
-        pass
-
-    # TODO thin_lines: compute average distance of points in all lines. points within a line that lie closer to their predecessor than this value are culled. ?
-
-    # TODO optional xrange and yrange args, crop to these ranges (i.e. split crossing lines intelligently) in emit
-
     def emit(self):
         """Useless dummy implementation."""
 
         print(self.lines)
+
+    # TODO could implement several optimizations
+    # TODO optimize? ideally: reorder list of lines such that sum of distances between end and start points is minimal. equivalent to tsp => np-complete. could implement a basic variant where a start point that coincide with the end point of another line leads to the two lines being drawn one after the other, this removing the need for pen movement (this would make the hand-coded variant of the trojaborg labyrinth example obsolete)
+    # TODO thin_lines? compute average distance of points in all lines. points within a line that lie closer to their predecessor than this value are culled. ?
+    # TODO crop? optional xrange and yrange args, crop to these ranges (i.e. split crossing lines intelligently) in emit
+    # TODO rotate?
+    # TODO mirror?
 
 class RealPlotter(Plotter):
     """BrachiGraph plotting interface."""
@@ -311,8 +309,8 @@ def main():
     for i in range(0, 10):
         c.circle(0, 0, i + 2)
 
-    plotter = AutoPlotter().from_canvas(c)
     #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
+    plotter = AutoPlotter().from_canvas(c)
     plotter.emit()
 
 if __name__ == "__main__":

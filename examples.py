@@ -7,7 +7,9 @@ import random
 τ = 2 * math.pi
 
 def spiral_mountain(c):
-    """first try at implementing spirals, looks a bit like an inverted mountain"""
+    """
+    First shot at implementing spirals, looks a bit like an inverted mountain.
+    """
 
     cx = 0
     cy = 0
@@ -26,7 +28,7 @@ def spiral_mountain(c):
         n += increment
 
 def spiral_debian(c):
-    """second try at implementing spirals, looks like the debian logo"""
+    """Second try, looks like the Debian logo."""
 
     cx = 0
     cy = 0
@@ -49,7 +51,7 @@ def spiral_debian(c):
         n += increment
 
 def spiral_rose(c):
-    """third try at implementing spirals, looks like a rose"""
+    """Third try, looks like a rose."""
 
     cx = 0
     cy = 0
@@ -77,7 +79,7 @@ def spiral_rose(c):
     c.line(x, y)
 
 def lines_boxes_arcs(c):
-    """test pattern for various primitives"""
+    """Test pattern for various primitives."""
 
     for i in range(0,10):
         c.line(𝕣()*2, 𝕣())
@@ -93,7 +95,7 @@ def concentric_circles(c):
         c.circle(0, 0, i + 2)
 
 def spiral_grid(c):
-    """grid of spirals with increasing winding numbers"""
+    """Grid of spirals with increasing winding numbers."""
 
     x = 5
     y = 2
@@ -101,14 +103,16 @@ def spiral_grid(c):
         c.spiral(((i - 1) % x) * 9, int((i - 1) / x) * 9, i, 4 / i)
 
 def circle_heart(c):
-    """concentric circles, only parts of which are drawn closer to the center,
-    yielding a vaguely heart-shaped negative space"""
+    """
+    Concentric circles, only parts of which are drawn closer to the center,
+    yielding a vaguely heart-shaped negative space.
+    """
 
     for i in range(15):
         c.arc(0, 0, i + 2, τ/2 - (τ/2 * ((i+1) / 15)), τ/2 + (τ/2 * ((i+1) / 15)))
 
 def spiral_row(c):
-    """diagonal row of ever-more-spiraly spirals"""
+    """Diagonal row of ever-more-spiraly spirals."""
     for i in range(4, 21):
         c.spiral(2*i, i, i/7, 0.5)
 
@@ -129,7 +133,7 @@ def radial_lines(c):
         c.line(x, y)
 
 def raidal_lines_interrupted(c):
-    """radial lines, with an interruption"""
+    """Radial lines, with an interruption."""
 
     def xy(r, a):
         x = r * math.cos(a)
@@ -142,7 +146,7 @@ def raidal_lines_interrupted(c):
         a = τ * (i / m)
         r1 = 6 + 𝕣() * 2
         r2 = 4 + 𝕣()
-        r4 = 3 + 𝕣()  # shoulda swapped r4 and r3 variable names at the start of this and the following line
+        r4 = 3 + 𝕣()
         r3 = 1 + 𝕣()
         [x, y] = xy(r1, a)
         c.move(x, y)
@@ -179,12 +183,13 @@ def cog(c):
     c.circle(0, 0, 5)
 
 def trojaborg_labyrinth_1(c):
-    """trojaborg labyrinth, take 1 (drawn in an order that was easy to generate,
-    but thus with lots of unnecessary pen movements), see
+    """
+    Trojaborg labyrinth, take 1 (drawn in an order that was easy to generate,
+    but thus with lots of unnecessary pen movements), see:
     https://i.pinimg.com/originals/db/5f/e7/db5fe768cf21d0fd00a7f6be6ca43c73.jpg
     """
 
-    # TODO labyrinth: make heuristic that turns generated one into hand-coded one, make its size parametric
+    # TODO make its size parametric (this one is an 11-ring variant, other variants exist: https://en.wikipedia.org/wiki/Troy_Town)
 
     d = 5 * τ
 
@@ -228,8 +233,10 @@ def trojaborg_labyrinth_1(c):
     c.arc(-3, 6, 3, 0, τ/4, i/d)
 
 def trojaborg_labyrinth_2(c):
-    """trojaborg labyrinth, take 2 (correct drawing order), can be drawn next to
-    take 1 to show differences due to pen up/down inaccuracies"""
+    """
+    Trojaborg labyrinth, take 2 (correct drawing order), can be drawn next to
+    take 1 (hence xoff) to show differences due to pen up/down inaccuracies.
+    """
 
     xoff = 24
 
@@ -272,8 +279,10 @@ def trojaborg_labyrinth_2(c):
     c.arc(xoff-3, 0, -6, τ/4, τ/2)
 
 def wiki_spiral(c):
-    """fancy spiral thingy, via
-    https://commons.wikimedia.org/wiki/File:Turtle_Graphics_Spiral.svg"""
+    """
+    Fancy spiral thingy, via
+    https://commons.wikimedia.org/wiki/File:Turtle_Graphics_Spiral.svg.
+    """
 
     def xy(r, a):
         x = r * math.cos(a)
@@ -320,11 +329,14 @@ def overlaid_3dish_balls(c):
         c.line(x,y)
 
 def line_circles(c):
-    """circles made up of lines, via
+    """
+    Circles made up of lines, via
     https://twitter.com/generativehut/status/1257576360933023744 and
-    https://stackoverflow.com/a/14310071"""
+    https://stackoverflow.com/a/14310071.
+    """
 
     # TODO could do this with multiple colors, one for each circle
+
     nm = 5
     mm = (nm-2)*7
     ro = 10
@@ -353,7 +365,7 @@ def hatched_circle(c):
             c.line(-x - r, y - r)
 
 def ca(c):
-    """elementary cellular automaton"""
+    """Elementary cellular automaton."""
 
     random.seed(42)
 
@@ -374,7 +386,7 @@ def ca(c):
     for i, ru in enumerate(bin_rule_choice):
         rule["{:03b}".format(i)] = ru
 
-    # init
+    # init ca
     for _ in range(width):
         state.append("1" if 𝕣() > 0.5 else "0")
     log.append(state)
@@ -429,13 +441,16 @@ def overlapping_circles(c):
     c.arc(2, 0, -1, 2*τ/3, τ)
 
 def moire_spirals(c):
+    """An attempt to create Moiré patterns using spirals."""
+
     for i in range(4):
         c.spiral(0, i, 10, 1, 0.3)
 
 c = bs.Canvas()
 
-uji(c)
+#uji(c)
+trojaborg_labyrinth_2(c)
 
-#plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
+#plotter = bs.AutoPlotter().from_file("test-patterns/accuracy.json")
 plotter = bs.AutoPlotter().from_canvas(c)
 plotter.emit()
