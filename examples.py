@@ -184,7 +184,7 @@ def trojaborg_labyrinth_1(c):
     https://i.pinimg.com/originals/db/5f/e7/db5fe768cf21d0fd00a7f6be6ca43c73.jpg
     """
 
-    # TODO labyrinth: make heuristic that turns generated one into hand-coded one, make its size parametric. also why does move not seem to terminate lines?
+    # TODO labyrinth: make heuristic that turns generated one into hand-coded one, make its size parametric
 
     d = 5 * τ
 

@@ -28,6 +28,8 @@ def debug(msg):
     sys.stderr.write(f"{msg}\n")
 
 class Plotter:
+    """Common plotting interface."""
+
     def __init__(self, lines):
         self.lines = lines
 
@@ -45,10 +47,18 @@ class Plotter:
         # TODO ideally: reorder list of lines such that sum of distances between end and start points is minimal. equivalent to tsp => np-complete
         pass
 
+    # TODO thin_lines: compute average distance of points in all lines. points within a line that lie closer to their predecessor than this value are culled. ?
+
+    # TODO optional xrange and yrange args, crop to these ranges (i.e. split crossing lines intelligently) in emit
+
     def emit(self):
+        """Useless dummy implementation."""
+
         print(self.lines)
 
 class RealPlotter(Plotter):
+    """BrachiGraph plotting interface."""
+
     def __init__(self, lines):
         super().__init__(lines)
 
@@ -62,15 +72,27 @@ class RealPlotter(Plotter):
 
     def emit(self):
         self.bg.plot_lines(self.lines)
-        #self.bg.grid_lines(interpolate=400, both=True)
+
+    def demo(self):
+        """Just for testing whether the BrachioGraph is functioning."""
+
+        self.bg.grid_lines(interpolate=400, both=True)
 
 class FakePlotter(Plotter):
+    """SVG-emitting plotting interface."""
+
     def __init__(self, lines):
         super().__init__(lines)
 
     def emit(self):
         """
-        TODO yellow: pen movements when up, blue: line number, purple: line segement number, green: line starting point, red: line segment point
+        Emits an annotated (set detailed = False to generate a boring variant)
+        preview of the drawing on stdout. Colors mean the following:
+        Yellow: pen movements when not drawing.
+        Blue: Line number.
+        Purple: Line segement number.
+        Green: Line starting point.
+        Red: Line segment point.
         """
         detailed = True
 
@@ -107,6 +129,11 @@ class FakePlotter(Plotter):
         print(svg)
 
     def __viewbox(self):
+        """
+        Determines the axis-aligned bounding box around the drawing, returns it
+        in the format (xmin, ymin, width, height) reqired by the SVG viewBox
+        attribute."""
+
         xmin = self.lines[0][0][0]
         xmax = self.lines[0][0][0]
         ymin = self.lines[0][0][1]
@@ -123,30 +150,45 @@ class FakePlotter(Plotter):
                     ymax = p[1]
         return (xmin, ymin, xmax - xmin, ymax - ymin)
 
-# TODO this would be neater as a class AutoPlotter, but I haven't found a way to make that work elegantly
 def AutoPlotter():
+    """
+    Determines whether to actually-plot or fake-plot the drawing. This would be
+    neater as a class that turns itself into one of the two classes on init, but
+    I haven't found a way to make that work. The syntax is the same, though, so
+    I guess this is alright.
+    """
+
     if socket.gethostname() == PI_HOSTNAME:
         return RealPlotter
     else:
         return FakePlotter
 
 class Canvas:
+    """Easel not included."""
+
     def __init__(self):
-        # TODO optional xrange and yrange args, crop to these ranges (i.e. split crossing lines intelligently) in emit
         self.lines = []
         self.x = 0
         self.y = 0
         self.current_line = [[0, 0]]
 
     def emit(self):
+        """
+        Finish the current line (or discard it if it's a singleton, dummy line)
+        and return the lines.
+        """
+
         if len(self.current_line) > 1:
             self.lines.append(self.current_line)
             self.current_line = [[self.x, self.y]]
         return self.lines
 
-    # TODO thin_lines: compute average distance of points in all lines. points within a line that lie closer to their predecessor than this value are culled. ?
-
     def __m(self, x, y):
+        """
+        Finish the current line (or discard it if it's a singleton, dummy line)
+        and move to the new point, beginning a dummy line at this location.
+        """
+
         if len(self.current_line) > 1:
             self.lines.append(self.current_line)
         self.x = x
@@ -154,17 +196,25 @@ class Canvas:
         self.current_line = [[self.x, self.y]]
 
     def __l(self, x, y):
+        """Add a segment to the current line."""
+
         self.current_line.append([x, y])
         self.x = x
         self.y = y
 
     def move(self, x, y):
+        """Move the pen without drawing."""
+
         self.__m(x, y)
 
     def line(self, x, y):
+        """Draw a line from the current position to the given position."""
+
         self.__l(x, y)
 
     def rect(self, x0, y0, x1, y1):
+        """Draw a rectangle specified by the x and y limits."""
+
         self.__m(x0, y0)
         self.__l(x1, y0)
         self.__l(x1, y1)
@@ -172,16 +222,22 @@ class Canvas:
         self.__l(x0, y0)
 
     def __xy(self, cx, cy, r, a):
-        # TODO comment: polar to xy
+        """
+        Polar to xy coordinate transform, adapted from
+        https://stackoverflow.com/a/839931.
+        """
 
         x = cx + r * math.cos(a)
         y = cy + r * math.sin(a)
         return [x, y]
 
     def arc(self, cx, cy, r, s, e, detail=0.1):
-        # TODO arc: maybe detail = r/10pi multiplied with detail setting? hmm, might ruin old things
-        # TODO comment: s, e in radians
-        # via https://stackoverflow.com/a/839931
+        """
+        Draw an arc along the edge of an imaginary circle with radius r centered
+        on point (cx, cy), with s and e (both in radians) being the start and
+        end angle. If r is negative, the arc is drawn from the other end (this
+        can help avoid unnecessary pen movements).
+        """
 
         cmp = lambda a: a < e
 
@@ -215,13 +271,16 @@ class Canvas:
         self.__l(x, y)
 
     def circle(self, cx, cy, r, detail=0.1):
-        # TODO arc: maybe detail = r/10pi multiplied with detail setting? hmm, might ruin old things
+        """Draw a circle with radius r around point (cx, cy)."""
+
         self.arc(cx, cy, r, 0, TAU, detail)
 
     def spiral(self, cx, cy, w, j=1, detail=0.1):
-        # TODO arc: maybe detail = r/10pi multiplied with detail setting? hmm, might ruin old things
-        # TODO comment: w = windings, j = jump between windings
-        # TODO could use different increment in the middle, mult with square root of distance from outermost?
+        """
+        Draw a spiral around point (cx, cy). w is the number of windings (not
+        necessarily a whole number), meanwhile j describes the jump/gap between
+        windings.
+        """
 
         def xy(r, a):
             return self.__xy(cx, cy, r, a)
