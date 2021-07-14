@@ -91,3 +91,10 @@ The code is intentionally kept simple and extendible.
 * points are 2-ary lists of x and y coordinates.
 
 If your plotter can be driven via Python and you're able to implement a function that translates this representation into whatever representation your plotter expects (see `RealPlotter.emit` and `FakePlotter.emit`), you should be golden. *(Feel free to send a pull request!)*
+
+
+## Related Work
+
+* Converting SVGs into the JSON format expected by this tool and the BrachioGraph software: https://github.com/Findus23/BrachioGraph-Utils
+* Raster images can be vectorized using the built-in BrachioGraph tooling, see here: https://github.com/evildmp/BrachioGraph/blob/master/linedraw.py
+* Advanced turtle drawing tool for AxiDraw plotters: https://github.com/fogleman/axi
