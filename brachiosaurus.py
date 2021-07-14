@@ -309,8 +309,8 @@ def main():
     for i in range(0, 10):
         c.circle(0, 0, i + 2)
 
-    #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
     plotter = AutoPlotter().from_canvas(c)
+    #plotter = AutoPlotter().from_file("test-patterns/accuracy.json")
     plotter.emit()
 
 if __name__ == "__main__":

@@ -81,6 +81,8 @@ python3 ~/Dropbox/code/brachiosaurus/mydrawing.py > ~/Desktop/preview.svg
 
 Look no further than `examples.py` – which has the same structure as the `mydrawing.py` file outlined above and can be deployed and run in the same manner – where I've been collecting the code of some drawings I've made myself.
 
+Alternatively, you can easily create your own examples using [UJI](https://doersino.github.io/uji/), a generative art tool of my own design – it's able to export drawings in the JSON format supported by the `AutoPlotter().from_file()` function.
+
 
 ### You've got a different plotter?
 
